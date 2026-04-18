@@ -1,0 +1,12 @@
+# Never commit these
+*.env
+*.env.local
+.env.*
+secrets/
+private/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+report.md
+report.json

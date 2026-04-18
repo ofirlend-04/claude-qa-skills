@@ -1,0 +1,100 @@
+<!--
+  Example: RTL layout — before and after.
+  Rule set: B1, B2, B3, B4, B7, B8.
+-->
+
+<!-- ============================================================= -->
+<!-- BAD — Hebrew content in LTR shell with physical CSS properties -->
+<!-- ============================================================= -->
+<!DOCTYPE html>
+<html lang="he">
+<!--                  ^^^^^^^^^
+     Missing dir="rtl" — browser renders LTR.
+     Punctuation lands on the wrong side. -->
+<head>
+  <meta charset="utf-8">
+  <title>חנות הספרים</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      /* Poppins has no Hebrew glyphs — falls back to Times New Roman on Windows. */
+    }
+    .card {
+      margin-left: 16px;       /* physical — backwards in RTL */
+      padding-right: 12px;     /* physical — backwards in RTL */
+      text-align: left;        /* physical — backwards */
+    }
+    .toolbar {
+      display: flex;
+      flex-direction: row-reverse;  /* fighting RTL with CSS — brittle */
+    }
+  </style>
+</head>
+<body>
+  <nav class="toolbar">
+    <a href="/">בית</a>
+    <a href="/books">ספרים</a>
+    <a href="/cart">→ עגלה</a>
+    <!--          ^^
+        Hardcoded arrow points the wrong way in RTL. -->
+  </nav>
+  <div class="card">
+    <h2>המלצה של השבוע</h2>
+    <p>פורסם ב־<span id="date"></span></p>
+    <script>
+      // Renders "4/17/2026" in Hebrew body copy.
+      document.getElementById('date').textContent =
+        new Date().toLocaleDateString();
+    </script>
+  </div>
+</body>
+</html>
+
+
+<!-- ============================================================= -->
+<!-- GOOD — RTL shell + logical properties + Hebrew font + locale   -->
+<!-- ============================================================= -->
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>חנות הספרים</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600&display=swap">
+  <style>
+    body {
+      font-family: 'Heebo', system-ui, 'Arial Hebrew', sans-serif;
+    }
+    .card {
+      margin-inline-start: 16px;   /* logical — flips with dir */
+      padding-inline-end: 12px;
+      text-align: start;
+    }
+    .toolbar { display: flex; }   /* row is fine — dir="rtl" handles order */
+
+    [dir="rtl"] .flip-on-rtl { transform: scaleX(-1); }
+  </style>
+</head>
+<body>
+  <nav class="toolbar">
+    <a href="/">בית</a>
+    <a href="/books">ספרים</a>
+    <a href="/cart">
+      <span class="flip-on-rtl" aria-hidden="true">→</span>
+      עגלה
+    </a>
+  </nav>
+  <div class="card">
+    <h2>המלצה של השבוע</h2>
+    <p>פורסם ב־<time id="date"></time></p>
+    <script>
+      const el = document.getElementById('date');
+      const d = new Date();
+      el.setAttribute('datetime', d.toISOString());
+      el.textContent = d.toLocaleDateString('he-IL');  // "17.4.2026"
+    </script>
+  </div>
+</body>
+</html>

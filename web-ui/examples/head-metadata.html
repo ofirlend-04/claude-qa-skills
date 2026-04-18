@@ -1,0 +1,87 @@
+<!--
+  Example: <head> metadata — before and after.
+  Rule set: C1, D3, D7, E1, E2, E3, E4, E5, E7, E8, F2.
+-->
+
+<!-- ============================================================= -->
+<!-- BAD — minimal head, blocking scripts, leaked key, no metadata  -->
+<!-- ============================================================= -->
+<!DOCTYPE html>
+<html>
+<!--        ^
+     Missing lang attribute (E8). -->
+<head>
+  <title>Page</title>
+  <!--   ^
+       Generic title — useless in SERPs (E1). -->
+  <script src="/analytics.js"></script>
+  <!-- Render-blocking (D7). -->
+  <script>
+    window.OPENAI_KEY = 'sk-proj-abc123...';
+    // Leaked API key (F2).
+  </script>
+  <style>
+    @font-face { src: url('/fonts/heebo.woff2') format('woff2'); }
+    /*  No font-display: swap (D3). */
+  </style>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <h1>Our mission</h1>
+  <!-- Multiple h1 (E7). -->
+</body>
+</html>
+
+
+<!-- ============================================================= -->
+<!-- GOOD — complete head, deferred scripts, server-side secrets    -->
+<!-- ============================================================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JARVIS Dashboard — Personal AI Assistant</title>
+  <meta name="description"
+        content="JARVIS is Ofir's voice-first AI assistant. Telegram bot, Vercel dashboard, calendar + git + system watchers.">
+
+  <link rel="canonical" href="https://jarvis.example.com/">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jarvis.example.com/">
+  <meta property="og:title" content="JARVIS Dashboard — Personal AI Assistant">
+  <meta property="og:description" content="Voice-first AI assistant with Telegram bot and live dashboard.">
+  <meta property="og:image" content="https://jarvis.example.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Preconnect + fonts with swap -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'Heebo';
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/heebo.woff2') format('woff2');
+      unicode-range: U+0590-05FF;
+    }
+  </style>
+
+  <!-- Analytics deferred — doesn't block render -->
+  <script src="/analytics.js" defer></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header>...</header>
+  <main id="main">
+    <h1>Welcome</h1>
+    <section>
+      <h2>Our mission</h2>
+      <!-- Only one h1; subsequent sections use h2+. -->
+    </section>
+  </main>
+</body>
+</html>

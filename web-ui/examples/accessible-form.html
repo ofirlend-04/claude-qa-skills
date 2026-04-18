@@ -1,0 +1,81 @@
+<!--
+  Example: accessible form — before and after.
+  Rule set: A1, A3, A4, A6, C3, C4.
+-->
+
+<!-- ============================================================= -->
+<!-- BAD — labels missing, tiny inputs, mystery icon buttons        -->
+<!-- ============================================================= -->
+<form>
+  <input type="email" placeholder="Email" style="font-size:14px">
+  <!--                                                ^^^^^^^^^
+       iOS will zoom on focus. -->
+  <input type="password" placeholder="Password" style="font-size:14px">
+
+  <button><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>
+  <!--   ^^^^^^
+       No aria-label. Screen reader: "button". -->
+
+  <div onclick="submitForm()" class="submit">Submit</div>
+  <!--   ^^^^^^^
+       Div with onClick is not keyboard accessible. -->
+</form>
+
+
+<!-- ============================================================= -->
+<!-- GOOD — labels, 16px font, named icon, real <button>            -->
+<!-- ============================================================= -->
+<form novalidate>
+  <div class="field">
+    <label for="email">Email address</label>
+    <input
+      id="email"
+      type="email"
+      name="email"
+      autocomplete="email"
+      required
+      aria-required="true"
+      aria-describedby="email-hint"
+      style="font-size:16px"
+    >
+    <p id="email-hint" class="hint">We'll never share it.</p>
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      name="password"
+      autocomplete="current-password"
+      required
+      aria-required="true"
+      minlength="8"
+      style="font-size:16px"
+    >
+  </div>
+
+  <button type="button" aria-label="Show password" class="toggle-pw">
+    <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    </svg>
+  </button>
+
+  <button type="submit" class="submit">Submit</button>
+</form>
+
+<style>
+  /* Touch targets at least 44x44 (C4) */
+  .toggle-pw, .submit {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+  /* 16px input font to prevent iOS zoom (C3) */
+  input { font-size: 16px; }
+  /* Visible focus ring (never remove outline without a replacement) */
+  :focus-visible {
+    outline: 2px solid #0055ff;
+    outline-offset: 2px;
+  }
+</style>

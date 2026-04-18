@@ -1,0 +1,19 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.ofir.cleanapp'
+    compileSdkVersion 36
+
+    defaultConfig {
+        applicationId "com.ofir.cleanapp"
+        minSdkVersion 24
+        targetSdkVersion 36
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.android.billingclient:billing:7.0.0'
+}

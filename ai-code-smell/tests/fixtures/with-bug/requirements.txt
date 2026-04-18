@@ -1,0 +1,2 @@
+requests==2.31.0
+this-pypi-package-does-not-exist-zzz-99999==1.0

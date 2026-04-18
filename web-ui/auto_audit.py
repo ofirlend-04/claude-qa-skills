@@ -111,6 +111,34 @@ def rel(root: Path, p: Path) -> str:
         return str(p)
 
 
+# ─── Inline suppressions: `// qa-ignore: B1,G5` on the line before ──────────
+# Line N suppression also applies to N+1, N+2 (JSX often has multi-line opening
+# tags, so the rule may fire 1-2 lines below the comment).
+INLINE_SUPPRESS_RE = re.compile(r"(?:#|//)\s*qa-ignore\s*:\s*([A-Z0-9,\s]+)")
+
+
+def build_line_suppressions(text: str) -> dict[int, set[str]]:
+    """Map 1-based line number → set of rule IDs suppressed on that line."""
+    sup: dict[int, set[str]] = {}
+    for i, line in enumerate(text.split("\n"), start=1):
+        m = INLINE_SUPPRESS_RE.search(line)
+        if not m:
+            continue
+        rules = {r.strip() for r in m.group(1).split(",") if r.strip()}
+        sup.setdefault(i, set()).update(rules)
+        # JSX: a qa-ignore comment can precede the opening tag by 1-2 lines
+        sup.setdefault(i + 1, set()).update(rules)
+        sup.setdefault(i + 2, set()).update(rules)
+    return sup
+
+
+def is_suppressed(rule: str, line: int, sup: dict[int, set[str]]) -> bool:
+    s = sup.get(line)
+    if not s:
+        return False
+    return rule in s or "ALL" in s
+
+
 # ---------------------------------------------------------------------------
 # Folder mode — static source scan
 # ---------------------------------------------------------------------------
@@ -131,6 +159,12 @@ def scan_folder(root: Path, report: Report) -> None:
         is_markup = f.suffix.lower() in {".html", ".htm", ".tsx", ".jsx", ".vue", ".svelte"}
         is_script = f.suffix.lower() in {".ts", ".js"} or is_markup
 
+        # Track how many findings exist before this file — anything added
+        # by the scans below is "this file's" findings and is eligible for
+        # line-level qa-ignore suppression.
+        pre_count = len(report.findings)
+        sup = build_line_suppressions(text)
+
         if is_markup:
             scan_markup_source(text, loc, report)
         if is_style:
@@ -141,6 +175,20 @@ def scan_folder(root: Path, report: Report) -> None:
 
         if HEBREW_RE.search(text) and is_markup:
             scan_rtl_specifics(text, loc, report)
+
+        # Apply inline qa-ignore suppressions to findings from this file only.
+        if sup:
+            filtered: list[Finding] = []
+            for existing in report.findings[:pre_count]:
+                filtered.append(existing)
+            for finding in report.findings[pre_count:]:
+                line_match = re.search(r":(\d+)$", finding.location)
+                if line_match:
+                    fline = int(line_match.group(1))
+                    if is_suppressed(finding.rule, fline, sup):
+                        continue  # drop
+                filtered.append(finding)
+            report.findings = filtered
 
     # HTML file level checks (full parse)
     for f in files:

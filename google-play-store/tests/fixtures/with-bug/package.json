@@ -1,0 +1,10 @@
+{
+  "name": "whatsapp-messenger-lite",
+  "version": "1.0.0",
+  "description": "A faster WhatsApp clone with extra features.",
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "firebase": "^10.0.0",
+    "amplitude-js": "^8.0.0"
+  }
+}

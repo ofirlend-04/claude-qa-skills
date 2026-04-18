@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.whatsapp.clone">
+
+    <!-- Pattern 2: SMS permission without DEFAULT_HANDLER -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Pattern 3: CALL_LOG without justification -->
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+
+    <!-- Pattern 5: Background location with no prominent disclosure -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Pattern 11: Broad storage -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+    <!-- Foreground service used, but without a type (Pattern 10) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:label="FakeWhatsApp"
+        android:theme="@style/AppTheme">
+
+        <!-- Pattern 4: AccessibilityService declared -->
+        <service
+            android:name=".AutoTapAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- Pattern 10: service without foregroundServiceType -->
+        <service
+            android:name=".BackgroundSyncService"
+            android:exported="false" />
+
+        <!-- Pattern 12: Hardcoded API key in a meta-data entry -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA1234567890abcdefghijklmnopqrstuvw" />
+    </application>
+</manifest>

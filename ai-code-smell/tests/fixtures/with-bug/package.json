@@ -1,0 +1,9 @@
+{
+  "name": "with-bug",
+  "version": "0.0.1",
+  "dependencies": {
+    "react": "^18.0.0",
+    "this-package-definitely-does-not-exist-xyz-12345": "^1.0.0",
+    "pydantic-jsonlogic-ai": "^0.0.1"
+  }
+}

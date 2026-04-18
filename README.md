@@ -12,6 +12,7 @@ No generic "best practices" — only patterns that bit us in production.
 | [`apple-app-store`](./apple-app-store/) | App Store rejection risks before submission | 30+ real rejections we fixed |
 | [`ios-capacitor`](./ios-capacitor/) | Capacitor + RevenueCat + iOS code quality bugs | 36 shipped apps |
 | [`web-ui`](./web-ui/) | a11y + RTL + performance + SEO. **RTL/Hebrew first-class.** | JARVIS dashboard, Editox editor, landing pages |
+| [`security`](./security/) | LLM-era security vulns: leaked Claude/OpenAI keys, prompt injection, open MCP servers, bill-stealing proxies, SQL injection, CORS. **The angle Snyk/SonarQube/Semgrep miss.** | Real incidents + 10 pattern files |
 
 ## Proven on first run
 
@@ -57,6 +58,9 @@ python3 ios-capacitor/auto_audit.py /path/to/capacitor/app
 # Web UI audit (folder or URL)
 python3 web-ui/auto_audit.py ./my-nextjs-project
 python3 web-ui/auto_audit.py https://mysite.com
+
+# Security vulnerability scanner (folder)
+python3 security/auto_audit.py ./my-project
 ```
 
 Exit codes: `2` if any P0, `1` if any P1, `0` if clean — perfect for CI.

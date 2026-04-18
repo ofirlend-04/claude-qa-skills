@@ -1,0 +1,9 @@
+{
+  "name": "cleanapp",
+  "version": "1.0.0",
+  "description": "A minimal clean app. Privacy policy: https://example.com/privacy",
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@revenuecat/purchases-capacitor": "^8.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.example.whatsapp.clone'
+    compileSdkVersion 33
+
+    defaultConfig {
+        applicationId "com.example.whatsapp.clone"
+        minSdkVersion 21
+        // Pattern 6: targetSdk too old (Play requires >= 34 since Aug 2024)
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            // Pattern 12: hardcoded secret in build.gradle
+            buildConfigField "String", "OPENAI_API_KEY", "\"sk-abcdefghijklmnopqrstuvwxyz1234567890\""
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    // No billing library — yet the app ships a paywall (see src/App.jsx).
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}

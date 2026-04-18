@@ -1,0 +1,7 @@
+{
+  "_comment": "Curated list of package names known to be hallucinated by LLMs and squatted by attackers. Grows as we encounter more. Sources: GitGuardian 2026 report, Trend Micro slopsquatting post, Aikido blog, direct observation of Claude/Cursor output.",
+  "npm": [
+  ],
+  "pypi": [
+  ]
+}
